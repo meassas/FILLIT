@@ -5,85 +5,87 @@
 
 int		proto_place(char **tetri, char **map, int t, int my, int mx, int m);
 
-#define BUF_SIZE 550// 21 Char * 26 Tetrimax
+#define BUF_SIZE 546// 21 Char * 26 Tetrimax
 
-int		main(int ac, char **av)
+char	*read_from_fd(char *av)
 {
-	int fd;
-	int ret;
-	char buf[BUF_SIZE + 1];
-	char	**tabtetri;
-	int		y;
-	char	**map;
-	int	tmp;
-	int		nbtetri;
+	int		fd;
+	int		ret;
+	char	*buf;
 
-	tmp = 0;
-	if (ac != 2)
-	{
-		ft_putstr("usage : source_file target_file");
-		return (0);
-	}
-	y = 0;
-	fd = open(av[1], O_RDONLY);
+	fd = open(av, O_RDONLY);
 	if (fd == -1)
 	{
-		ft_putstr("Open FAILED");
-		return (1);
+		ft_putendl("error");
+		exit(0);
 	}
-	ret = read(fd, buf, BUF_SIZE); // soit boucle de read, soit taille max 26 elements
+	buf = ft_strnew(BUF_SIZE);
+	ret = read(fd, buf, BUF_SIZE + 1);
 	buf[ret] = '\0';
-	if (ret > 546 || ret < 19) //nb de char max pour 26 tetriminos
+	if (ret > 545 || ret < 19 || (ret + 1) % 21 != 0)
 	{
-		ft_putstr("error");
-		return (0);
+		ft_putendl("error");
+		exit (0);
 	}
 	if (close(fd) == -1)
 	{
-		ft_putstr("read FAILED");
-		return (1);
+		ft_putendl("Read Failed");
+		exit (0);
 	}
-	nbtetri = cntTetri(buf, '\n');
+	return (buf);
+}
+
+void	fillit(char *buf)
+{
+	char **tabtetri;
+	int cur;
+
+	cur = 0;
 	tabtetri = ft_splitetri(buf, '\n');
-	while (tabtetri[tmp] != 0)
+	while (tabtetri[cur])
 	{
-		if (ft_tetri_isvalid(tabtetri[tmp]) == 0)
+		if (ft_tetri_isvalid(tabtetri[cur]) == 0)
 		{
 			ft_putendl("error");
-			return (1);
+			exit (0);
 		}
-		tmp++;
+		cur++;
 	}
+}
+
+int		main(int ac, char **av)
+{
+	int nbtetri;
+	char **tabtetri;
+	int tmp;
+	char *buf;
+	char **map;
+
+	buf = read_from_fd(av[1]);
+	if (ac != 2)
+	{
+		ft_putendl("usage : fillit target_file");
+		exit (0);
+	}
+	tmp = 0;
+	fillit(buf);
+	nbtetri = cntTetri(buf, '\n');
+	tabtetri = ft_splitetri(buf, '\n');
 	ft_rangetetri(tabtetri);
 	ft_setalpha(tabtetri);
 	map = ft_setmap(ft_sqrtSup(nbtetri * 4));
-	//ft_putnbr(nbtetri);
-	//ft_putchar('\n');
-	//if (nbtetri == 1)
-	//{
-		while (ft_place_OK(tabtetri[0], map, 0, 0) != 4)
-		{
-			free (map);
-			nbtetri++;
-			map = ft_setmap(nbtetri);
-		}
-	//	ft_cpy(tabtetri[0], map, 0, 0);
-	//}
-	//else
-	//{
-		while (placetetri(tabtetri, map, 0, 0, 0, 0) != 1)
-		{
-			free (map);
-			map = ft_setmap(nbtetri);
-			nbtetri++;
-		}
-	//}
-	y = 0;
-	while (map[y] != 0)
+	tmp = ft_sqrtSup(nbtetri * 4);
+	while (placetetri(tabtetri, map, 0, 0, 0, 0) != 1)
 	{
-		ft_putstr(map[y]);
-		ft_putchar('\n');
-		y++;
+		free (map);
+		tmp++;
+		map = ft_setmap(tmp);
+	}
+	tmp = 0;
+	while (map[tmp] != 0)
+	{
+		ft_putendl(map[tmp]);
+		tmp++;
 	}
 	return (0);
 }

@@ -6,7 +6,7 @@
 /*   By: malbanes <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/11/30 12:56:52 by malbanes          #+#    #+#             */
-/*   Updated: 2016/12/28 23:46:11 by meassas          ###   ########.fr       */
+/*   Updated: 2017/01/02 18:13:44 by meassas          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -76,7 +76,7 @@ int		placetetri(char **tetri, char **map, int t, int my, int mx, int m)
 {
 	if (tetri[t] == NULL)
 		return(1);
-	while (ft_place_OK(tetri[t], map, my, mx) != 4)
+		while (ft_place_OK(tetri[t], map, my, mx) != 4)
 	{
 		mx++;
 		if (map[my][mx] == '\0')
@@ -86,29 +86,29 @@ int		placetetri(char **tetri, char **map, int t, int my, int mx, int m)
 		}
 		if (map[my] == NULL)
 		{
-			if (ft_deplacebloc_ok(tetri[t - 1], map, t - 1, 1) == 1 && m < 50)
+			if (ft_deplacebloc_ok(tetri[t - 1], map, t - 1, 1) == 1)
 			{
 				ft_deplacebloctetri(tetri[t - 1], map, t - 1, 1);
 				m++;
 				mx = 0;
 				my = 0;
 			}
-			else if (m < 600)
+			else
 			{
 				m++;
 				while (ft_deplacebloc_ok(tetri[t - 1], map, t - 1, 1) == 0)
 				{
 					ft_removetetri(map, t - 1);
 					t--;
-					if (t <= 0)
-						return (0);
 				}
+				if (t < 0 || ft_deplacebloc_ok(tetri[t], map, t - 1, 1 == -1))
+					return (0);
 				ft_deplacebloctetri(tetri[t - 1], map, t - 1, 1);
 				mx = 0;
 				my = 0;
 			}
-			else
-				return (0);
+			//else
+			//	return (0);
 		}
 	}
 	ft_cpy(tetri[t], map, my, mx);

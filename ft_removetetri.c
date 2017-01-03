@@ -6,7 +6,7 @@
 /*   By: malbanes <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/12/02 14:19:05 by malbanes          #+#    #+#             */
-/*   Updated: 2016/12/28 23:46:16 by meassas          ###   ########.fr       */
+/*   Updated: 2017/01/02 16:57:29 by malbanes         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,6 +54,8 @@ int		ft_deplacebloc_ok(char *tetri, char **map, int t, int one)
 	i = 0;
 	y = 0;
 	x = 0;
+	if (t == -1)
+		return (- 1);
 	while (tetri[i] && map[y][x] && tetri[i] == '.')
 		i++;
 	while (map[y] != NULL)
